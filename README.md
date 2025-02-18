@@ -4,7 +4,7 @@
 ### 수강생 : 여러 강의
 ### 강사 N:1 강의 | 수강생 : N:M
 
-# 👥 강의
+# 📚 강의
 
 ## ➡️ **강의 목록 조회**
 - **Method**: `GET`
@@ -79,7 +79,6 @@
         - `title` (String): 강의 제목
         - `introduce` (String): 강의 소개
         - `price` (Number): 강의 가격
-        - `category` (Category): 강의 카테고리
 - **Response**:
     - `id` (Long): 수정된 강의 ID
     - `title` (String): 수정된 강의 제목
@@ -89,3 +88,44 @@
     - `updateTime` (LocalDateTime): 수정 일시
 
 ---
+
+# 👥회원
+## ➡️ 회원가입
+- **Method**: `PUT`
+- **Path**: `/members/signup`
+- **Example Endpoint**: `https://localhost:8080/members/signup`
+- **Request Parameters**:
+    - **Body Parameters**:
+        - `email` (String): 이메일
+        - `nickName` (String): 닉네임
+- **Response**:
+    - `id` (Long): 회원 ID
+    - `email` (String): 이메일
+    - `nickName` (String): 닉네임
+
+## ➡️ 회원탈퇴
+- **Method**: `Delete`
+- **Path**: `/members/{memberId}`
+- **Example Endpoint**: `https://localhost:8080/members/1`
+- **Request Parameters**:
+    - **Path Parameters**:
+        - `id` (Long): 회원 ID
+- **Response**:
+    - `id` (Long): 회원 ID
+
+---
+
+# 수강신청
+- **Method**: `POST`
+- **Path**: `/lectures/{lectureId}`
+- **Example Endpoint**: `https://localhost:8080/lectures/1`
+- **Request Parameters**:
+    - **Path Parameters**:
+        - `id` (Long): 강의 ID
+        - `id` (Long): 회원 ID
+- **Response**:
+    - `id` (Long): 강의 ID
+    - `id` (Long): 회원 ID
+
+  
+   
