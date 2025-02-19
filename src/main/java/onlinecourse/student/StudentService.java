@@ -53,12 +53,17 @@ public class StudentService {
         studentLecture.setLecture(lecture);
         studentLecture.setStudent(student);
 
+        lecture.countStudent();
         StudentLecture savedStudentLecture = studentLectureRepository.save(studentLecture);
+
+
 
         return new StudentLectureResponse(
                 savedStudentLecture.getId(),
                 lectureId,
                 studentId,
                 savedStudentLecture.getEnrollmentTime());
+
+
     }
 }

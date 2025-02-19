@@ -206,6 +206,8 @@ public class LectureTest {
         assertThat(lectureId.title()).isEqualTo("자바 배우기");
         assertThat(lectureId.introduce()).isEqualTo("자바, Spring을 통한 웹 개발 강의입니다.");
         assertThat(lectureId.price()).isEqualTo(50000);
+        assertThat(lectureId.studentCount()).isEqualTo(1);
+        assertThat(lectureId.students().get(0).nickName()).isEqualTo("chuchu");
 
     }
 

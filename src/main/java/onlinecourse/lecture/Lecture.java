@@ -95,7 +95,7 @@ public class Lecture {
 
 
     public void countStudent() {
-        this.countStudent = countStudent+1;
+        this.countStudent++;
     }
 
     public void update(
