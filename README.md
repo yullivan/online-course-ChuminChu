@@ -49,6 +49,7 @@
         - `introduce` (String): 강의 소개
         - `price` (Number): 강의 가격
         - `category` (Category): 강의 카테고리
+        - `teacherName` (String): 강사 이름
         - `createTime` (LocalDateTime): 강의 등록 일시
 - **Response**:
     - `id` (Long): 강의 ID
@@ -56,7 +57,8 @@
     - `introduce` (String): 강의 소개
     - `price` (Number): 강의 가격
     - `category` (Category): 강의 카테고리
-    - `createTime` (LocalDateTime): 강의 등록 일시
+    - `teacherName` (String): 강사 이름
+  - `createTime` (LocalDateTime): 강의 등록 일시
 
 ## ➡️ **강의 삭제**
 - **Method**: `DELETE`
@@ -91,7 +93,7 @@
 
 # 👥회원
 ## ➡️ 회원가입
-- **Method**: `PUT`
+- **Method**: `POST`
 - **Path**: `/members/signup`
 - **Example Endpoint**: `https://localhost:8080/members/signup`
 - **Request Parameters**:
