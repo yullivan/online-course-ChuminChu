@@ -1,7 +1,6 @@
 package onlinecourse.lecture;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import onlinecourse.lecture.dto.LectureListResponse;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,6 +19,7 @@ public class LectureQueryRepository {
         return jpaQueryFactory
                 .selectFrom(lecture)
                 .join(lecture.teacher).fetchJoin()
+                .where(lecture.deleted.isFalse())
                 .orderBy(lecture.createTime.desc())
                 .fetch();
     }

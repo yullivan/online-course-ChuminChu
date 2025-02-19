@@ -1,5 +1,6 @@
 package onlinecourse.lecture;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import jakarta.persistence.*;
 import onlinecourse.Category;
 import onlinecourse.student.Student;
@@ -10,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Entity
 public class Lecture {
@@ -24,6 +26,8 @@ public class Lecture {
     private Category category;
 
     private String introduce;
+
+    private boolean deleted = false;
 
     @CreatedDate
     private LocalDateTime createTime = LocalDateTime.now();
@@ -93,7 +97,9 @@ public class Lecture {
         return updateTime;
     }
 
-
+    public boolean isDeleted() {
+        return deleted;
+    }
 
     public void countStudent() {
         this.countStudent++;
@@ -108,4 +114,12 @@ public class Lecture {
         this.introduce = introduce;
         this.price = price;
     }
+
+    public void deleteBy(){
+        if(!this.getStudents().isEmpty()){
+            throw new NoSuchElementException("수강을 신청한 학생이 있어 강의를 삭제할 수 없습니다.");
+        }
+        this.deleted=true;
+    }
+
 }

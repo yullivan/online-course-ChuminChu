@@ -289,4 +289,83 @@ public class LectureTest {
                 .statusCode(200);
 
     }
+
+    @Test
+    void 삭제된_강의목록_빼고_조회() throws InterruptedException {
+        LectureResponse lecture1 = RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new LectureCreateRequest(
+                        "자바 배우기",
+                        "자바, Spring을 통한 웹 개발 강의입니다.",
+                        50000,
+                        Category.Math,
+                        teacher.getId(),
+                        LocalDateTime.now()
+                ))
+                .when()
+                .post("/lectures")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(LectureResponse.class);
+
+        LectureResponse lecture2 = RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new LectureCreateRequest(
+                        "자바 응용하기",
+                        "자바, Spring을 통한 웹 개발 실습강의입니다.",
+                        50000,
+                        Category.Math,
+                        teacher.getId(),
+                        LocalDateTime.now().minusDays(2)
+                ))
+                .when()
+                .post("/lectures")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(LectureResponse.class);
+
+        LectureResponse lecture3 = RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new LectureCreateRequest(
+                        "과학 배우기",
+                        "과학 강의입니다.",
+                        50000,
+                        Category.Science,
+                        teacher.getId(),
+                        LocalDateTime.now()
+                ))
+                .when()
+                .post("/lectures")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(LectureResponse.class);
+
+        RestAssured
+                .given().log().all()
+                .when()
+                .pathParam("lectureId", lecture1.id())
+                .delete("/lectures/{lectureId}")
+                .then().log().all()
+                .statusCode(200);
+
+        List<LectureListResponse> list = RestAssured
+                .given().log().all()
+                .when()
+                .get("/lectures")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getList(".", LectureListResponse.class);
+
+        assertThat(list.size()).isEqualTo(2);
+
+
+    }
 }

@@ -113,6 +113,7 @@ public class LectureService {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(() -> new NoSuchElementException("찾는 강의가 없습니다."));
 
-        lectureRepository.delete(lecture);
+        lecture.deleteBy();
+        lectureRepository.save(lecture);
     }
 }
