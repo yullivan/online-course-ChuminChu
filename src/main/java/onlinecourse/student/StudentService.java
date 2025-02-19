@@ -38,7 +38,8 @@ public class StudentService {
         Student student = studentRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("등록된 Id가 없습니다."));
 
-        studentRepository.delete(student);
+        student.deleteBy();
+        studentRepository.save(student);
     }
 
     @Transactional
@@ -46,7 +47,7 @@ public class StudentService {
         Lecture lecture = lectureRepository.findByIdAndDeletedFalse(lectureId)
                 .orElseThrow(() -> new NoSuchElementException("찾는 강의가 없습니다."));
 
-        Student student = studentRepository.findById(studentId)
+        Student student = studentRepository.findByIdAndDeletedFalse(studentId)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
 
         StudentLecture studentLecture = new StudentLecture();

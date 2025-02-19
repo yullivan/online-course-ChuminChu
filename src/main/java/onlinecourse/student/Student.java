@@ -15,6 +15,8 @@ public class Student {
 
     private String Email;
 
+    private boolean deleted = false;
+
     @OneToMany(mappedBy = "student")
     private List<StudentLecture> studentLecture;
 
@@ -41,5 +43,13 @@ public class Student {
 
     public String getEmail() {
         return Email;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void deleteBy(){
+        this.deleted = true;
     }
 }

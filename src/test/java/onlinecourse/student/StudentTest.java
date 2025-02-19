@@ -195,6 +195,58 @@ public class StudentTest {
                 .post("/lectures/{lectureId}")
                 .then().log().all()
                 .statusCode(500);
+    }
+
+    @Test
+    void 존재하지않은_회원_수강신청_실패() {
+        SignUpResponse student = RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new SignUpRequest(
+                        "chu@gmail.com",
+                        "chuchu"
+                ))
+                .when()
+                .post("/members/signup")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(SignUpResponse.class);
+
+        LectureResponse lecture = RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new LectureCreateRequest(
+                        "자바 배우기",
+                        "자바, Spring을 통한 웹 개발 강의입니다.",
+                        50000,
+                        Category.Math,
+                        teacher.getId(),
+                        LocalDateTime.now()
+                ))
+                .when()
+                .post("/lectures")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(LectureResponse.class);
+
+        RestAssured
+                .given().log().all()
+                .pathParam("memberId",student.id())
+                .when()
+                .delete("/members/{memberId}")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured
+                .given().log().all()
+                .pathParam("lectureId", lecture.id())
+                .queryParam("studentId", student.id())
+                .when()
+                .post("/lectures/{lectureId}")
+                .then().log().all()
+                .statusCode(500);
 
     }
 }
