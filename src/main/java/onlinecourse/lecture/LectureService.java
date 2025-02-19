@@ -15,24 +15,25 @@ import java.util.NoSuchElementException;
 public class LectureService {
 
     private final LectureRepository lectureRepository;
+    private final LectureQueryRepository lectureQueryRepository;
     private final TeacherRepository teacherRepository;
 
-    public LectureService(LectureRepository lectureRepository, TeacherRepository teacherRepository) {
+    public LectureService(LectureRepository lectureRepository, LectureQueryRepository lectureQueryRepository, TeacherRepository teacherRepository) {
         this.lectureRepository = lectureRepository;
+        this.lectureQueryRepository = lectureQueryRepository;
         this.teacherRepository = teacherRepository;
     }
 
     public List<LectureListResponse> findAll() {
-        return lectureRepository.findAll()
+        return lectureQueryRepository.findAll()
                 .stream()
-                .map(lecture ->
-                        new LectureListResponse(
-                                lecture.getId(),
-                                lecture.getTitle(),
-                                lecture.getTeacher().getName(),
-                                lecture.getPrice(),
-                                lecture.getCategory(),
-                                lecture.getCreateTime()))
+                .map(lecture ->  new LectureListResponse(
+                        lecture.getId(),
+                        lecture.getTitle(),
+                        lecture.getTeacher().getName(),
+                        lecture.getPrice(),
+                        lecture.getCategory(),
+                        lecture.getCreateTime()))
                 .toList();
     }
 

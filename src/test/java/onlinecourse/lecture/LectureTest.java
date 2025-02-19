@@ -73,7 +73,7 @@ public class LectureTest {
     }
 
     @Test
-    void 강의목록조회() {
+    void 강의목록조회() throws InterruptedException {
         LectureResponse lecture1 = RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
@@ -91,6 +91,7 @@ public class LectureTest {
                 .statusCode(200)
                 .extract()
                 .as(LectureResponse.class);
+        Thread.sleep(1000);
 
         LectureResponse lecture2 = RestAssured
                 .given().log().all()
@@ -101,7 +102,7 @@ public class LectureTest {
                         50000,
                         Category.Math,
                         teacher.getId(),
-                        LocalDateTime.now()
+                        LocalDateTime.now().minusDays(2)
                 ))
                 .when()
                 .post("/lectures")
@@ -109,6 +110,7 @@ public class LectureTest {
                 .statusCode(200)
                 .extract()
                 .as(LectureResponse.class);
+        Thread.sleep(1000);
 
         LectureResponse lecture3 = RestAssured
                 .given().log().all()
@@ -140,7 +142,9 @@ public class LectureTest {
                 .getList(".", LectureListResponse.class);
 
         assertThat(list.size()).isEqualTo(3);
-        assertThat(list.get(1).id()).isEqualTo(lecture2.id());
+        assertThat(list.get(0).title()).isEqualTo(lecture3.title());
+        assertThat(list.get(1).title()).isEqualTo(lecture2.title());
+        assertThat(list.get(2).title()).isEqualTo(lecture1.title());
 
     }
 
