@@ -13,15 +13,12 @@ public class Teacher {
 
     private String name;
 
-    @OneToMany(mappedBy = "teacher")
-    private List<Lecture> lectures;
 
     public Teacher() {
     }
 
-    public Teacher(String name, List<Lecture> lecture) {
+    public Teacher(String name) {
         this.name = name;
-        this.lectures = lecture;
     }
 
     public Long getId() {
@@ -32,7 +29,4 @@ public class Teacher {
         return name;
     }
 
-    public List<Lecture> getLectures() {
-        return lectures;
-    }
 }
