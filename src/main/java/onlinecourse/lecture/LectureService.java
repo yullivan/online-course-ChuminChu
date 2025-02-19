@@ -88,7 +88,7 @@ public class LectureService {
 
     @Transactional
     public LectureResponse update(Long lectureId, LectureUpdateRequest lectureUpdateRequest) {
-        Lecture lecture = lectureRepository.findById(lectureId)
+        Lecture lecture = lectureRepository.findByIdAndDeletedFalse(lectureId)
                 .orElseThrow(() -> new NoSuchElementException("찾으시는 강의가 없습니다."));
 
         lecture.update(
