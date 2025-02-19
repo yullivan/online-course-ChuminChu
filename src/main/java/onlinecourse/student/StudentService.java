@@ -43,7 +43,7 @@ public class StudentService {
 
     @Transactional
     public StudentLectureResponse select(Long lectureId, Long studentId) {
-        Lecture lecture = lectureRepository.findById(lectureId)
+        Lecture lecture = lectureRepository.findByIdAndDeletedFalse(lectureId)
                 .orElseThrow(() -> new NoSuchElementException("찾는 강의가 없습니다."));
 
         Student student = studentRepository.findById(studentId)

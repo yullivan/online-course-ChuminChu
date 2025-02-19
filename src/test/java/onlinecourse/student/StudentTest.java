@@ -144,4 +144,57 @@ public class StudentTest {
 
 
     }
+
+    @Test
+    void 삭제된_강의_수강신청_실패() {
+        SignUpResponse student = RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new SignUpRequest(
+                        "chu@gmail.com",
+                        "chuchu"
+                ))
+                .when()
+                .post("/members/signup")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(SignUpResponse.class);
+
+        LectureResponse lecture = RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new LectureCreateRequest(
+                        "자바 배우기",
+                        "자바, Spring을 통한 웹 개발 강의입니다.",
+                        50000,
+                        Category.Math,
+                        teacher.getId(),
+                        LocalDateTime.now()
+                ))
+                .when()
+                .post("/lectures")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(LectureResponse.class);
+
+        RestAssured
+                .given().log().all()
+                .when()
+                .pathParam("lectureId", lecture.id())
+                .delete("/lectures/{lectureId}")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured
+                .given().log().all()
+                .pathParam("lectureId", lecture.id())
+                .queryParam("studentId", student.id())
+                .when()
+                .post("/lectures/{lectureId}")
+                .then().log().all()
+                .statusCode(500);
+
+    }
 }
