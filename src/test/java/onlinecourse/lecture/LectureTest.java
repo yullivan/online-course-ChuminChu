@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class LectureTest {
@@ -365,7 +366,87 @@ public class LectureTest {
                 .getList(".", LectureListResponse.class);
 
         assertThat(list.size()).isEqualTo(2);
+    }
 
+    @Test
+    void 삭제된_강의상세조회x() {
+        LectureResponse lecture = RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new LectureCreateRequest(
+                        "과학 배우기",
+                        "과학 강의입니다.",
+                        50000,
+                        Category.Science,
+                        teacher.getId(),
+                        LocalDateTime.now()
+                ))
+                .when()
+                .post("/lectures")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(LectureResponse.class);
+
+        RestAssured
+                .given().log().all()
+                .when()
+                .pathParam("lectureId", lecture.id())
+                .delete("/lectures/{lectureId}")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured
+                .given().log().all()
+                .pathParam("lectureId", lecture.id())
+                .when()
+                .get("/lectures/{lectureId}")
+                .then().log().all()
+                .statusCode(500);
+
+    }
+
+    @Test
+    void 삭제된_강의목록_수정x() {
+        LectureResponse lecture = RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new LectureCreateRequest(
+                        "과학 배우기",
+                        "과학 강의입니다.",
+                        50000,
+                        Category.Science,
+                        teacher.getId(),
+                        LocalDateTime.now()
+                ))
+                .when()
+                .post("/lectures")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(LectureResponse.class);
+
+        RestAssured
+                .given().log().all()
+                .when()
+                .pathParam("lectureId", lecture.id())
+                .delete("/lectures/{lectureId}")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .pathParam("lectureId", lecture.id())
+                .body(new LectureUpdateRequest(
+                        "수정된 이름",
+                        "수정된 소개",
+                        1000
+                ))
+                .when()
+                .put("/lectures/{lectureId}")
+                .then().log().all()
+                .statusCode(500);
 
     }
 }

@@ -38,7 +38,7 @@ public class LectureService {
     }
 
     public LectureDetailResponse findById(Long lectureId) {
-        Lecture lecture = lectureRepository.findById(lectureId)
+        Lecture lecture = lectureRepository.findByIdAndDeletedFalse(lectureId)
                 .orElseThrow(() -> new NoSuchElementException("강의가 존재하지 않습니다."));
 
         List<StudentResponse> studentResponses = lecture.getStudents()
