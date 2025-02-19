@@ -6,6 +6,7 @@ import onlinecourse.student.Student;
 import onlinecourse.student.StudentLecture;
 import onlinecourse.teacher.Teacher;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +28,7 @@ public class Lecture {
     @CreatedDate
     private LocalDateTime createTime = LocalDateTime.now();
 
-
+    @LastModifiedDate
     private LocalDateTime updateTime = LocalDateTime.now();
 
     @ManyToOne

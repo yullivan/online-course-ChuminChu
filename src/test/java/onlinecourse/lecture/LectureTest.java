@@ -208,7 +208,6 @@ public class LectureTest {
         assertThat(lectureId.price()).isEqualTo(50000);
         assertThat(lectureId.studentCount()).isEqualTo(1);
         assertThat(lectureId.students().get(0).nickName()).isEqualTo("chuchu");
-
     }
 
     @Test
@@ -247,7 +246,18 @@ public class LectureTest {
                 .extract()
                 .as(LectureResponse.class);
 
+        LectureDetailResponse lectureId = RestAssured
+                .given().log().all()
+                .pathParam("lectureId", 수정된강의.id())
+                .when()
+                .get("/lectures/{lectureId}")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(LectureDetailResponse.class);
+
         assertThat(수정된강의.introduce()).isEqualTo("수정된 소개");
+        assertThat(lectureId.updateTime()).isEqualTo(수정된강의.createTime());
     }
 
     @Test
