@@ -23,7 +23,6 @@ public class LectureQueryRepository {
     public List<Lecture> findAll(String title, String teacherName, Category category, Pageable pageable){
         return jpaQueryFactory
                 .selectFrom(lecture)
-                .join(lecture.teacher).fetchJoin()
                 .where(
                         lecture.deleted.isFalse(),
                         lecture.isPrivate.isFalse(),
