@@ -12,13 +12,9 @@ import java.util.NoSuchElementException;
 public class StudentService {
 
     private final StudentRepository studentRepository;
-    private final LectureRepository lectureRepository;
-    private final LectureEnrollmentRepository studentLectureRepository;
 
-    public StudentService(StudentRepository studentRepository, LectureRepository lectureRepository, LectureEnrollmentRepository studentLectureRepository) {
+    public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
-        this.lectureRepository = lectureRepository;
-        this.studentLectureRepository = studentLectureRepository;
     }
 
     public SignUpResponse save(SignUpRequest sign) {

@@ -15,9 +15,11 @@ public class LectureEnrollment {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(nullable = false)
     private Student student;
 
     @ManyToOne
+    @JoinColumn(nullable = false)
     private Lecture lecture;
 
     @CreatedDate

@@ -17,13 +17,15 @@ public class Lecture {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String title;
 
     private int price;
 
+    @Column(nullable = false)
     private Category category;
 
+    @Column(nullable = false)
     private String introduce;
 
     private boolean deleted = false;
