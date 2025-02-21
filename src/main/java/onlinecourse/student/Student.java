@@ -46,7 +46,7 @@ public class Student {
         return deleted;
     }
 
-    public void deleteBy(){
+    public void deleted(){
         this.deleted = true;
     }
 }

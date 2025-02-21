@@ -38,7 +38,7 @@ public class LectureEnrollmentService {
         lectureEnrollment.setLecture(lecture);
         lectureEnrollment.setStudent(student);
 
-        lecture.countStudent();
+        lecture.incrementStudentCount();
         LectureEnrollment savedStudentLecture = lectureEnrollmentRepository.save(lectureEnrollment);
 
         return new LectureEnrollmentResponse(

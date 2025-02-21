@@ -32,7 +32,8 @@ public class StudentService {
         Student student = studentRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("등록된 Id가 없습니다."));
 
-        student.deleteBy();
+        student.deleted();
+
         studentRepository.save(student);
     }
 }

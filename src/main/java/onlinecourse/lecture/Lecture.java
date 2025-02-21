@@ -108,7 +108,7 @@ public class Lecture {
         return isPrivate;
     }
 
-    public void countStudent() {
+    public void incrementStudentCount() {
         this.countStudent++;
     }
 

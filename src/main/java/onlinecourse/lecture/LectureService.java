@@ -46,10 +46,11 @@ public class LectureService {
         Lecture lecture = lectureRepository.findByIdAndDeletedFalse(lectureId)
                 .orElseThrow(() -> new NoSuchElementException("강의가 존재하지 않습니다."));
 
-        List<StudentResponse> studentResponses = lecture.getStudents()
+
+        List<StudentEnrollmentResponse> studentResponses = lecture.getStudents()
                 .stream()
                 .filter(studentLecture -> !studentLecture.getStudent().isDeleted())
-                .map(s -> new StudentResponse(
+                .map(s -> new StudentEnrollmentResponse(
                         s.getStudent().getNickName(),
                         s.getEnrollmentTime()
                         ))
