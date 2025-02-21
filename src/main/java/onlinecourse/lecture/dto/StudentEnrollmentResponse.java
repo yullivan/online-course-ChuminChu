@@ -1,4 +1,4 @@
-package onlinecourse.student.dto;
+package onlinecourse.lecture.dto;
 
 import java.time.LocalDateTime;
 
