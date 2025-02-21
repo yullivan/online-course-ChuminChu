@@ -45,6 +45,6 @@ public class LectureEnrollmentService {
                 savedStudentLecture.getId(),
                 savedStudentLecture.getLecture().getId(),
                 savedStudentLecture.getStudent().getId(),
-                LocalDateTime.now());
+                savedStudentLecture.getEnrollmentTime());
     }
 }
