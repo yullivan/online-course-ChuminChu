@@ -43,6 +43,7 @@ public class LectureService {
 
         List<StudentResponse> studentResponses = lecture.getStudents()
                 .stream()
+                .filter(studentLecture -> !studentLecture.getStudent().isDeleted())
                 .map(s -> new StudentResponse(
                         s.getStudent().getNickName(),
                         s.getEnrollmentTime()

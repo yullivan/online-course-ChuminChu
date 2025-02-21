@@ -2,8 +2,6 @@ package onlinecourse.lecture;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import onlinecourse.Category;
 import onlinecourse.DatabaseCleanup;
 import onlinecourse.lecture.dto.*;
@@ -15,16 +13,13 @@ import onlinecourse.teacher.TeacherRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class LectureTest {
@@ -238,7 +233,8 @@ public class LectureTest {
                 .body(new LectureUpdateRequest(
                         "수정된 이름",
                         "수정된 소개",
-                        1000
+                        1000,
+                        LocalDateTime.now()
                 ))
                 .when()
                 .put("/lectures/{lectureId}")
@@ -441,12 +437,101 @@ public class LectureTest {
                 .body(new LectureUpdateRequest(
                         "수정된 이름",
                         "수정된 소개",
-                        1000
+                        1000,
+                        LocalDateTime.now()
                 ))
                 .when()
                 .put("/lectures/{lectureId}")
                 .then().log().all()
                 .statusCode(500);
+    }
 
+    @Test
+    void 삭제된_회원_강의상세조회_실패() {
+        LectureResponse lecture1 = RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new LectureCreateRequest(
+                        "자바 배우기",
+                        "자바, Spring을 통한 웹 개발 강의입니다.",
+                        50000,
+                        Category.Math,
+                        teacher.getId(),
+                        LocalDateTime.now()
+                ))
+                .when()
+                .post("/lectures")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(LectureResponse.class);
+
+        SignUpResponse student1 = RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new SignUpRequest(
+                        "chu@gmail.com",
+                        "chuchu"
+                ))
+                .when()
+                .post("/members/signup")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(SignUpResponse.class);
+
+        SignUpResponse student2 = RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new SignUpRequest(
+                        "haha@gmail.com",
+                        "haha"
+                ))
+                .when()
+                .post("/members/signup")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(SignUpResponse.class);
+
+        StudentLectureResponse student1_수강신청 = RestAssured
+                .given().log().all()
+                .pathParam("lectureId", lecture1.id())
+                .queryParam("studentId", student1.id())
+                .when()
+                .post("/lectures/{lectureId}")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(StudentLectureResponse.class);
+
+        StudentLectureResponse student2_수강신청 = RestAssured
+                .given().log().all()
+                .pathParam("lectureId", lecture1.id())
+                .queryParam("studentId", student1.id())
+                .when()
+                .post("/lectures/{lectureId}")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(StudentLectureResponse.class);
+
+        RestAssured
+                .given().log().all()
+                .pathParam("memberId", student1.id())
+                .when()
+                .delete("/members/{memberId}")
+                .then().log().all()
+                .statusCode(200);
+
+        LectureDetailResponse lectureId = RestAssured
+                .given().log().all()
+                .pathParam("lectureId", lecture1.id())
+                .when()
+                .get("/lectures/{lectureId}")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(LectureDetailResponse.class);
     }
 }
