@@ -1,5 +1,6 @@
 package onlinecourse.lecture;
 
+import onlinecourse.Category;
 import onlinecourse.lecture.dto.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +18,9 @@ public class LectureRestController {
     //강의 목록 조회
     @GetMapping("/lectures")
     public List<LectureListResponse> readAll(@RequestParam(required = false) String title,
-                                             @RequestParam(required = false) String teacherName){
-        return lectureService.findAll(title, teacherName);
+                                             @RequestParam(required = false) String teacherName,
+                                             @RequestParam(required = false) Category category){
+        return lectureService.findAll(title, teacherName,category);
     }
 
     //강의 상세 조회

@@ -1,5 +1,6 @@
 package onlinecourse.lecture;
 
+import onlinecourse.Category;
 import onlinecourse.lecture.dto.*;
 import onlinecourse.student.StudentRepository;
 import onlinecourse.student.dto.StudentResponse;
@@ -27,8 +28,8 @@ public class LectureService {
         this.studentRepository = studentRepository;
     }
 
-    public List<LectureListResponse> findAll(String title, String teacherName) {
-        return lectureQueryRepository.findAll(title, teacherName)
+    public List<LectureListResponse> findAll(String title, String teacherName, Category category) {
+        return lectureQueryRepository.findAll(title, teacherName,category)
                 .stream()
                 .map(lecture ->  new LectureListResponse(
                         lecture.getId(),

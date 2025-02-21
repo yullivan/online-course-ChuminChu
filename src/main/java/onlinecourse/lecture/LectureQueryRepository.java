@@ -1,7 +1,9 @@
 package onlinecourse.lecture;
 
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import onlinecourse.Category;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,7 +18,7 @@ public class LectureQueryRepository {
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
-    public List<Lecture> findAll(String title, String teacherName){
+    public List<Lecture> findAll(String title, String teacherName, Category category){
         return jpaQueryFactory
                 .selectFrom(lecture)
                 .join(lecture.teacher).fetchJoin()
@@ -24,11 +26,16 @@ public class LectureQueryRepository {
                         lecture.deleted.isFalse(),
                         lecture.isPrivate.isFalse(),
                         containsTitle(title),
-                        containsTeacherName(teacherName))
+                        containsTeacherName(teacherName),
+                        containsCategory(category))
                 .orderBy(
                         lecture.createTime.desc(),
                         lecture.countStudent.desc())
                 .fetch();
+    }
+
+    private BooleanExpression containsCategory(Category category) {
+        return (category == null) ? null : lecture.category.eq(category);
     }
 
     public BooleanExpression containsTitle(String title){

@@ -20,6 +20,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -463,5 +464,44 @@ public class LectureTest {
         assertThat(list1.size()).isEqualTo(3);
         assertThat(list.stream().allMatch(l -> l.title().contains("자바"))).isTrue();
         assertThat(list.stream().allMatch(l -> l.teacherName().contains(teacher.getName()))).isTrue();
+    }
+
+    @Test
+    void 검색_추가로_카테고리_필터가능() {
+        LectureResponse lecture1 = createLecture(
+                "자바 배우기", "자바, Spring을 통한 웹 개발 강의입니다.",
+                50000, Category.Math, teacher.getId()
+        );
+
+        LectureResponse lecture2 = createLecture(
+                "자바 응용하기", "자바, Spring을 통한 웹 개발 실습강의입니다.",
+                50000, Category.Math, teacher.getId()
+        );
+
+        LectureResponse lecture3 = createLecture(
+                "과학 배우기", "과학 강의입니다.",
+                50000, Category.Science, teacher.getId()
+        );
+
+        updateLectureToPublic(lecture1.id());
+        updateLectureToPublic(lecture2.id());
+        updateLectureToPublic(lecture3.id());
+
+        List<LectureListResponse> list = RestAssured
+                .given().log().all()
+                .param("title", "자바")
+                .param("category", Category.Math)
+                .when()
+                .get("/lectures")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getList(".", LectureListResponse.class);
+
+        assertThat(list.size()).isEqualTo(2);
+        assertThat(list.stream().allMatch(l->l.category().equals(Category.Math))).isTrue();
+        assertThat(list.stream().allMatch(l->l.title().contains("자바"))).isTrue();
+
     }
 }
