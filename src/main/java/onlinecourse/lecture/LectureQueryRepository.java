@@ -19,10 +19,14 @@ public class LectureQueryRepository {
         return jpaQueryFactory
                 .selectFrom(lecture)
                 .join(lecture.teacher).fetchJoin()
-                .where(lecture.deleted.isFalse())
+                .where(
+                        lecture.deleted.isFalse(),
+                        lecture.isPrivate.isFalse())
                 .orderBy(lecture.createTime.desc())
                 .fetch();
     }
+
+
 
 
 }

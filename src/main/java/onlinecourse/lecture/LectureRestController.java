@@ -41,4 +41,9 @@ public class LectureRestController {
     public void delete(@PathVariable Long lectureId){
         lectureService.delete(lectureId);
     }
+
+    @PatchMapping("/lectures/{lectureId}")
+    public void updatePrivate(@PathVariable Long lectureId){
+        lectureService.updatePrivate(lectureId);
+    }
 }

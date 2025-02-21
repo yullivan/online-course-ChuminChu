@@ -12,6 +12,7 @@ public record LectureResponse(
         int price,
         Category category,
         String teacherName,
+        boolean isPrivate,
         LocalDateTime createTime
 ) {
 }

@@ -77,7 +77,6 @@ public class LectureService {
                 lectureCreateRequest.introduce(),
                 teacher,
                 LocalDateTime.now()
-
         ));
 
         return new LectureResponse(
@@ -87,6 +86,7 @@ public class LectureService {
                 lecture.getPrice(),
                 lecture.getCategory(),
                 teacher.getName(),
+                lecture.isPrivate(),
                 lecture.getCreateTime());
     }
 
@@ -108,6 +108,7 @@ public class LectureService {
                 lecture.getPrice(),
                 lecture.getCategory(),
                 lecture.getTeacher().getName(),
+                lecture.isPrivate(),
                 lecture.getUpdateTime()
         );
 
@@ -119,6 +120,15 @@ public class LectureService {
                 .orElseThrow(() -> new NoSuchElementException("찾는 강의가 없습니다."));
 
         lecture.deleteBy();
+        lectureRepository.save(lecture);
+    }
+
+    @Transactional
+    public void updatePrivate(Long lectureId) {
+        Lecture lecture = lectureRepository.findById(lectureId)
+                .orElseThrow(() -> new NoSuchElementException("찾는 강의가 없습니다."));
+
+        lecture.setPublic();
         lectureRepository.save(lecture);
     }
 }

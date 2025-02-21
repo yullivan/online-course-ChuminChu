@@ -67,10 +67,11 @@ public class LectureTest {
 
         assertThat(lecture.id()).isEqualTo(1);
         assertThat(lecture.category()).isEqualTo(Category.Math);
+        assertThat(lecture.isPrivate()).isTrue();
     }
 
     @Test
-    void 강의목록조회() throws InterruptedException {
+    void 비공개_강의목록조회() throws InterruptedException {
         LectureResponse lecture1 = RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
@@ -127,6 +128,93 @@ public class LectureTest {
                 .extract()
                 .as(LectureResponse.class);
 
+        List<LectureListResponse> list = RestAssured
+                .given().log().all()
+                .when()
+                .get("/lectures")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getList(".", LectureListResponse.class);
+
+        assertThat(list.size()).isEqualTo(0);
+        assertThat(list.isEmpty()).isTrue();
+    }
+
+    @Test
+    void 공개_강의목록조회() throws InterruptedException {
+        LectureResponse lecture1 = RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new LectureCreateRequest(
+                        "자바 배우기",
+                        "자바, Spring을 통한 웹 개발 강의입니다.",
+                        50000,
+                        Category.Math,
+                        teacher.getId(),
+                        LocalDateTime.now()
+                ))
+                .when()
+                .post("/lectures")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(LectureResponse.class);
+        Thread.sleep(1000);
+
+        LectureResponse lecture2 = RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new LectureCreateRequest(
+                        "자바 응용하기",
+                        "자바, Spring을 통한 웹 개발 실습강의입니다.",
+                        50000,
+                        Category.Math,
+                        teacher.getId(),
+                        LocalDateTime.now().minusDays(2)
+                ))
+                .when()
+                .post("/lectures")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(LectureResponse.class);
+        Thread.sleep(1000);
+
+        LectureResponse lecture3 = RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new LectureCreateRequest(
+                        "과학 배우기",
+                        "과학 강의입니다.",
+                        50000,
+                        Category.Science,
+                        teacher.getId(),
+                        LocalDateTime.now()
+                ))
+                .when()
+                .post("/lectures")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(LectureResponse.class);
+
+        RestAssured
+                .given().log().all()
+                .pathParam("lectureId", lecture1.id())
+                .when()
+                .patch("/lectures/{lectureId}")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured
+                .given().log().all()
+                .pathParam("lectureId", lecture2.id())
+                .when()
+                .patch("/lectures/{lectureId}")
+                .then().log().all()
+                .statusCode(200);
 
         List<LectureListResponse> list = RestAssured
                 .given().log().all()
@@ -138,15 +226,11 @@ public class LectureTest {
                 .jsonPath()
                 .getList(".", LectureListResponse.class);
 
-        assertThat(list.size()).isEqualTo(3);
-        assertThat(list.get(0).title()).isEqualTo(lecture3.title());
-        assertThat(list.get(1).title()).isEqualTo(lecture2.title());
-        assertThat(list.get(2).title()).isEqualTo(lecture1.title());
-
+        assertThat(list.size()).isEqualTo(2);
     }
 
     @Test
-    void 강의상세조회() {
+    void 비공개_강의상세조회() {
         LectureResponse lecture1 = RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
@@ -289,7 +373,7 @@ public class LectureTest {
     }
 
     @Test
-    void 삭제된_강의목록_빼고_조회() throws InterruptedException {
+    void 공개된_삭제된_강의목록_빼고_조회() {
         LectureResponse lecture1 = RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
@@ -307,6 +391,14 @@ public class LectureTest {
                 .statusCode(200)
                 .extract()
                 .as(LectureResponse.class);
+
+        RestAssured
+                .given().log().all()
+                .pathParam("lectureId", lecture1.id())
+                .when()
+                .patch("/lectures/{lectureId}")
+                .then().log().all()
+                .statusCode(200);
 
         LectureResponse lecture2 = RestAssured
                 .given().log().all()
@@ -326,6 +418,14 @@ public class LectureTest {
                 .extract()
                 .as(LectureResponse.class);
 
+        RestAssured
+                .given().log().all()
+                .pathParam("lectureId", lecture2.id())
+                .when()
+                .patch("/lectures/{lectureId}")
+                .then().log().all()
+                .statusCode(200);
+
         LectureResponse lecture3 = RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
@@ -343,6 +443,14 @@ public class LectureTest {
                 .statusCode(200)
                 .extract()
                 .as(LectureResponse.class);
+
+        RestAssured
+                .given().log().all()
+                .pathParam("lectureId", lecture3.id())
+                .when()
+                .patch("/lectures/{lectureId}")
+                .then().log().all()
+                .statusCode(200);
 
         RestAssured
                 .given().log().all()

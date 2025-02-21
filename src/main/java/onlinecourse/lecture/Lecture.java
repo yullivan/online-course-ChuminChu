@@ -28,6 +28,8 @@ public class Lecture {
 
     private boolean deleted = false;
 
+    private boolean isPrivate = true;
+
     @CreatedDate
     private LocalDateTime createTime = LocalDateTime.now();
 
@@ -100,6 +102,10 @@ public class Lecture {
         return deleted;
     }
 
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
     public void countStudent() {
         this.countStudent++;
     }
@@ -120,7 +126,11 @@ public class Lecture {
             throw new NoSuchElementException("수강을 신청한 학생이 있어 강의를 삭제할 수 없습니다.");
         }
         this.deleted=true;
+    }
 
+    //공개로 전환
+    public void setPublic(){
+        this.isPrivate = false;
     }
 
 }
