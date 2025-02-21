@@ -2,8 +2,7 @@ package onlinecourse.lecture;
 
 import onlinecourse.Category;
 import onlinecourse.lecture.dto.*;
-import onlinecourse.student.StudentRepository;
-import onlinecourse.student.dto.StudentResponse;
+import onlinecourse.lecture.dto.StudentEnrollmentResponse;
 import onlinecourse.teacher.Teacher;
 import onlinecourse.teacher.TeacherRepository;
 import org.springframework.stereotype.Service;
@@ -20,13 +19,11 @@ public class LectureService {
     private final LectureRepository lectureRepository;
     private final LectureQueryRepository lectureQueryRepository;
     private final TeacherRepository teacherRepository;
-    private final StudentRepository studentRepository;
 
-    public LectureService(LectureRepository lectureRepository, LectureQueryRepository lectureQueryRepository, TeacherRepository teacherRepository, StudentRepository studentRepository) {
+    public LectureService(LectureRepository lectureRepository, LectureQueryRepository lectureQueryRepository, TeacherRepository teacherRepository) {
         this.lectureRepository = lectureRepository;
         this.lectureQueryRepository = lectureQueryRepository;
         this.teacherRepository = teacherRepository;
-        this.studentRepository = studentRepository;
     }
 
     public List<LectureListResponse> findAll(String title, String teacherName, Category category, Pageable pageable) {
@@ -74,6 +71,9 @@ public class LectureService {
         Teacher teacher = teacherRepository.findById(lectureCreateRequest.teacherId())
                 .orElseThrow(() -> new NoSuchElementException("강사가 없습니다."));
 
+      /*  Lecture lecture = lectureRepository.findById(lectureCreateRequest.lectureId);
+        lecture.getTeacher().getId()*/
+
         Lecture lecture = lectureRepository.save(new Lecture(
                 lectureCreateRequest.title(),
                 lectureCreateRequest.price(),
@@ -119,12 +119,12 @@ public class LectureService {
 
     }
 
+    @Transactional
     public void delete(Long lectureId) {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(() -> new NoSuchElementException("찾는 강의가 없습니다."));
 
         lecture.deleteBy();
-        lectureRepository.save(lecture);
     }
 
     @Transactional
@@ -133,6 +133,5 @@ public class LectureService {
                 .orElseThrow(() -> new NoSuchElementException("찾는 강의가 없습니다."));
 
         lecture.setPublic();
-        lectureRepository.save(lecture);
     }
 }
