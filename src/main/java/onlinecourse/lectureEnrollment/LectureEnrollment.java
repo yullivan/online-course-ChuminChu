@@ -1,13 +1,14 @@
-package onlinecourse.student;
+package onlinecourse.lectureEnrollment;
 
 import jakarta.persistence.*;
 import onlinecourse.lecture.Lecture;
+import onlinecourse.student.Student;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
 @Entity
-public class StudentLecture {
+public class LectureEnrollment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +23,10 @@ public class StudentLecture {
     @CreatedDate
     private LocalDateTime enrollmentTime = LocalDateTime.now();
 
-    public StudentLecture() {
+    public LectureEnrollment() {
     }
 
-    public StudentLecture(Student student, Lecture lecture) {
+    public LectureEnrollment(Student student, Lecture lecture) {
         this.student = student;
         this.lecture = lecture;
     }
