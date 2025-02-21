@@ -112,6 +112,10 @@ public class Lecture {
         this.countStudent++;
     }
 
+    public void reduceStudentCount(){
+        this.countStudent--;
+    }
+
     public void update(
             String title,
             String introduce,
