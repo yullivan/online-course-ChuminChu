@@ -37,6 +37,7 @@ public class LectureService {
                         lecture.getTitle(),
                         lecture.getTeacher().getName(),
                         lecture.getPrice(),
+                        lecture.getCountStudent(),
                         lecture.getCategory(),
                         lecture.getCreateTime()))
                 .toList();

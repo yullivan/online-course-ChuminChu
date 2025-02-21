@@ -9,6 +9,7 @@ public record LectureListResponse(
         String title,
         String teacherName,
         int price,
+        int countStudent,
         Category category,
         LocalDateTime createTime
 ) {
