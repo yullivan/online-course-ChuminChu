@@ -16,8 +16,9 @@ public class LectureRestController {
 
     //강의 목록 조회
     @GetMapping("/lectures")
-    public List<LectureListResponse> readAll(){
-        return lectureService.findAll();
+    public List<LectureListResponse> readAll(@RequestParam(required = false) String title,
+                                             @RequestParam(required = false) String teacherName){
+        return lectureService.findAll(title, teacherName);
     }
 
     //강의 상세 조회

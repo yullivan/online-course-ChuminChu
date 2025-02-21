@@ -27,8 +27,8 @@ public class LectureService {
         this.studentRepository = studentRepository;
     }
 
-    public List<LectureListResponse> findAll() {
-        return lectureQueryRepository.findAll()
+    public List<LectureListResponse> findAll(String title, String teacherName) {
+        return lectureQueryRepository.findAll(title, teacherName)
                 .stream()
                 .map(lecture ->  new LectureListResponse(
                         lecture.getId(),
