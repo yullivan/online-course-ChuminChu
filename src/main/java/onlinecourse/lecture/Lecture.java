@@ -128,7 +128,7 @@ public class Lecture {
     }
 
     public void deleteBy(){
-        if(!this.getStudents().isEmpty()){
+        if(this.countStudent != 0){
             throw new NoSuchElementException("수강을 신청한 학생이 있어 강의를 삭제할 수 없습니다.");
         }
         this.deleted=true;
