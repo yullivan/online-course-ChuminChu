@@ -1,7 +1,7 @@
 package onlinecourse.student;
 
 import jakarta.persistence.*;
-import onlinecourse.lecture.Lecture;
+import onlinecourse.lectureEnrollment.LectureEnrollment;
 
 import java.util.List;
 
@@ -17,8 +17,6 @@ public class Student {
 
     private boolean deleted = false;
 
-    @OneToMany(mappedBy = "student")
-    private List<StudentLecture> studentLecture;
 
     public Student() {
     }
@@ -37,9 +35,6 @@ public class Student {
         return nickName;
     }
 
-    public List<StudentLecture> getStudentLecture() {
-        return studentLecture;
-    }
 
     public String getEmail() {
         return Email;

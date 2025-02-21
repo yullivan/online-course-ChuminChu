@@ -1,12 +1,10 @@
 package onlinecourse.student;
 
-import onlinecourse.lecture.Lecture;
 import onlinecourse.lecture.LectureRepository;
+import onlinecourse.lectureEnrollment.LectureEnrollmentRepository;
 import onlinecourse.student.dto.SignUpRequest;
 import onlinecourse.student.dto.SignUpResponse;
-import onlinecourse.student.dto.StudentLectureResponse;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 
@@ -15,9 +13,9 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
     private final LectureRepository lectureRepository;
-    private final StudentLectureRepository studentLectureRepository;
+    private final LectureEnrollmentRepository studentLectureRepository;
 
-    public StudentService(StudentRepository studentRepository, LectureRepository lectureRepository, StudentLectureRepository studentLectureRepository) {
+    public StudentService(StudentRepository studentRepository, LectureRepository lectureRepository, LectureEnrollmentRepository studentLectureRepository) {
         this.studentRepository = studentRepository;
         this.lectureRepository = lectureRepository;
         this.studentLectureRepository = studentLectureRepository;
@@ -40,31 +38,5 @@ public class StudentService {
 
         student.deleteBy();
         studentRepository.save(student);
-    }
-
-    @Transactional
-    public StudentLectureResponse select(Long lectureId, Long studentId) {
-        Lecture lecture = lectureRepository.findByIdAndDeletedFalse(lectureId)
-                .orElseThrow(() -> new NoSuchElementException("찾는 강의가 없습니다."));
-
-        Student student = studentRepository.findByIdAndDeletedFalse(studentId)
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
-
-        StudentLecture studentLecture = new StudentLecture();
-        studentLecture.setLecture(lecture);
-        studentLecture.setStudent(student);
-
-        lecture.countStudent();
-        StudentLecture savedStudentLecture = studentLectureRepository.save(studentLecture);
-
-
-
-        return new StudentLectureResponse(
-                savedStudentLecture.getId(),
-                lectureId,
-                studentId,
-                savedStudentLecture.getEnrollmentTime());
-
-
     }
 }

@@ -1,10 +1,8 @@
 package onlinecourse.lecture;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
 import jakarta.persistence.*;
 import onlinecourse.Category;
-import onlinecourse.student.Student;
-import onlinecourse.student.StudentLecture;
+import onlinecourse.lectureEnrollment.LectureEnrollment;
 import onlinecourse.teacher.Teacher;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -39,7 +37,7 @@ public class Lecture {
     private Teacher teacher;
 
     @OneToMany(mappedBy = "lecture")
-    private List<StudentLecture> students;
+    private List<LectureEnrollment> students;
 
     private int countStudent;
 
@@ -77,7 +75,7 @@ public class Lecture {
         return teacher;
     }
 
-    public List<StudentLecture> getStudents() {
+    public List<LectureEnrollment> getStudents() {
         return students;
     }
 

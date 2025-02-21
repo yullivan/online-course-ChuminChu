@@ -5,9 +5,9 @@ import io.restassured.http.ContentType;
 import onlinecourse.Category;
 import onlinecourse.DatabaseCleanup;
 import onlinecourse.lecture.dto.*;
+import onlinecourse.lectureEnrollment.dto.LectureEnrollmentRequest;
 import onlinecourse.student.dto.SignUpRequest;
 import onlinecourse.student.dto.SignUpResponse;
-import onlinecourse.student.dto.StudentLectureResponse;
 import onlinecourse.teacher.Teacher;
 import onlinecourse.teacher.TeacherRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -178,7 +178,7 @@ public class LectureTest {
                 .extract()
                 .as(SignUpResponse.class);
 
-        StudentLectureResponse 수강신청 = RestAssured
+        LectureEnrollmentRequest 수강신청 = RestAssured
                 .given().log().all()
                 .pathParam("lectureId", lecture1.id())
                 .queryParam("studentId", student.id())
@@ -187,7 +187,7 @@ public class LectureTest {
                 .then().log().all()
                 .statusCode(200)
                 .extract()
-                .as(StudentLectureResponse.class);
+                .as(LectureEnrollmentRequest.class);
 
         LectureDetailResponse lectureId = RestAssured
                 .given().log().all()
@@ -494,7 +494,7 @@ public class LectureTest {
                 .extract()
                 .as(SignUpResponse.class);
 
-        StudentLectureResponse student1_수강신청 = RestAssured
+        LectureEnrollmentRequest student1_수강신청 = RestAssured
                 .given().log().all()
                 .pathParam("lectureId", lecture1.id())
                 .queryParam("studentId", student1.id())
@@ -503,9 +503,9 @@ public class LectureTest {
                 .then().log().all()
                 .statusCode(200)
                 .extract()
-                .as(StudentLectureResponse.class);
+                .as(LectureEnrollmentRequest.class);
 
-        StudentLectureResponse student2_수강신청 = RestAssured
+        LectureEnrollmentRequest student2_수강신청 = RestAssured
                 .given().log().all()
                 .pathParam("lectureId", lecture1.id())
                 .queryParam("studentId", student1.id())
@@ -514,7 +514,7 @@ public class LectureTest {
                 .then().log().all()
                 .statusCode(200)
                 .extract()
-                .as(StudentLectureResponse.class);
+                .as(LectureEnrollmentRequest.class);
 
         RestAssured
                 .given().log().all()
