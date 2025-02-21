@@ -1,14 +1,13 @@
 package onlinecourse.student;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import onlinecourse.Category;
 import onlinecourse.DatabaseCleanup;
 import onlinecourse.lecture.dto.LectureCreateRequest;
 import onlinecourse.lecture.dto.LectureResponse;
+import onlinecourse.lectureEnrollment.dto.LectureEnrollmentRequest;
+import onlinecourse.lectureEnrollment.dto.LectureEnrollmentResponse;
 import onlinecourse.student.dto.SignUpRequest;
 import onlinecourse.student.dto.SignUpResponse;
-import onlinecourse.student.dto.StudentLectureResponse;
 import onlinecourse.teacher.Teacher;
 import onlinecourse.teacher.TeacherRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,11 +17,9 @@ import io.restassured.RestAssured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -127,16 +124,16 @@ public class StudentTest {
                 .extract()
                 .as(LectureResponse.class);
 
-        StudentLectureResponse 수강신청 = RestAssured
+        LectureEnrollmentResponse 수강신청 = RestAssured
                 .given().log().all()
-                .pathParam("lectureId", lecture.id())
-                .queryParam("studentId", student.id())
+                .contentType(ContentType.JSON)
+                .body(new LectureEnrollmentRequest(lecture.id(), student.id()))
                 .when()
-                .post("/lectures/{lectureId}")
+                .post("/lectureEnrollment")
                 .then().log().all()
                 .statusCode(200)
                 .extract()
-                .as(StudentLectureResponse.class);
+                .as(LectureEnrollmentResponse.class);
 
         assertThat(수강신청.lectureId()).isEqualTo(1);
         assertThat(수강신청.studentId()).isEqualTo(1);
@@ -189,10 +186,10 @@ public class StudentTest {
 
         RestAssured
                 .given().log().all()
-                .pathParam("lectureId", lecture.id())
-                .queryParam("studentId", student.id())
+                .contentType(ContentType.JSON)
+                .body(new LectureEnrollmentRequest(lecture.id(), student.id()))
                 .when()
-                .post("/lectures/{lectureId}")
+                .post("/lectureEnrollment")
                 .then().log().all()
                 .statusCode(500);
     }
@@ -241,12 +238,13 @@ public class StudentTest {
 
         RestAssured
                 .given().log().all()
-                .pathParam("lectureId", lecture.id())
-                .queryParam("studentId", student.id())
+                .contentType(ContentType.JSON)
+                .body(new LectureEnrollmentRequest(lecture.id(), student.id()))
                 .when()
-                .post("/lectures/{lectureId}")
+                .post("/lectureEnrollment")
                 .then().log().all()
                 .statusCode(500);
+
 
     }
 }

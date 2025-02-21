@@ -6,6 +6,7 @@ import onlinecourse.Category;
 import onlinecourse.DatabaseCleanup;
 import onlinecourse.lecture.dto.*;
 import onlinecourse.lectureEnrollment.dto.LectureEnrollmentRequest;
+import onlinecourse.lectureEnrollment.dto.LectureEnrollmentResponse;
 import onlinecourse.student.dto.SignUpRequest;
 import onlinecourse.student.dto.SignUpResponse;
 import onlinecourse.teacher.Teacher;
@@ -178,16 +179,16 @@ public class LectureTest {
                 .extract()
                 .as(SignUpResponse.class);
 
-        LectureEnrollmentRequest 수강신청 = RestAssured
+        LectureEnrollmentResponse 수강신청 = RestAssured
                 .given().log().all()
-                .pathParam("lectureId", lecture1.id())
-                .queryParam("studentId", student.id())
+                .contentType(ContentType.JSON)
+                .body(new LectureEnrollmentRequest(lecture1.id(), student.id()))
                 .when()
-                .post("/lectures/{lectureId}")
+                .post("/lectureEnrollment")
                 .then().log().all()
                 .statusCode(200)
                 .extract()
-                .as(LectureEnrollmentRequest.class);
+                .as(LectureEnrollmentResponse.class);
 
         LectureDetailResponse lectureId = RestAssured
                 .given().log().all()
@@ -494,27 +495,27 @@ public class LectureTest {
                 .extract()
                 .as(SignUpResponse.class);
 
-        LectureEnrollmentRequest student1_수강신청 = RestAssured
+        LectureEnrollmentResponse student1_수강신청 = RestAssured
                 .given().log().all()
-                .pathParam("lectureId", lecture1.id())
-                .queryParam("studentId", student1.id())
+                .contentType(ContentType.JSON)
+                .body(new LectureEnrollmentRequest(lecture1.id(), student1.id()))
                 .when()
-                .post("/lectures/{lectureId}")
+                .post("/lectureEnrollment")
                 .then().log().all()
                 .statusCode(200)
                 .extract()
-                .as(LectureEnrollmentRequest.class);
+                .as(LectureEnrollmentResponse.class);
 
-        LectureEnrollmentRequest student2_수강신청 = RestAssured
+        LectureEnrollmentResponse student2_수강신청 = RestAssured
                 .given().log().all()
-                .pathParam("lectureId", lecture1.id())
-                .queryParam("studentId", student1.id())
+                .contentType(ContentType.JSON)
+                .body(new LectureEnrollmentRequest(lecture1.id(), student2.id()))
                 .when()
-                .post("/lectures/{lectureId}")
+                .post("/lectureEnrollment")
                 .then().log().all()
                 .statusCode(200)
                 .extract()
-                .as(LectureEnrollmentRequest.class);
+                .as(LectureEnrollmentResponse.class);
 
         RestAssured
                 .given().log().all()
