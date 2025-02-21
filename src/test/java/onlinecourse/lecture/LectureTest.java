@@ -155,8 +155,6 @@ public class LectureTest {
                 .statusCode(200);
     }
 
-
-
     @Test
     void 강의등록() {
         LectureResponse lecture = createLecture(
@@ -181,7 +179,7 @@ public class LectureTest {
                 Category.Math,
                 teacher.getId()
         );
-        Thread.sleep(1000); // Wait to simulate timing between lectures
+        Thread.sleep(1000);
 
         createLecture(
                 "자바 응용하기",
@@ -502,6 +500,76 @@ public class LectureTest {
         assertThat(list.size()).isEqualTo(2);
         assertThat(list.stream().allMatch(l->l.category().equals(Category.Math))).isTrue();
         assertThat(list.stream().allMatch(l->l.title().contains("자바"))).isTrue();
+    }
+
+    @Test
+    void 강의페이지() throws InterruptedException {
+        LectureResponse lecture1 = createLecture("자바 배우기", "자바, Spring을 통한 웹 개발 강의입니다.", 50000, Category.Math, teacher.getId());
+        Thread.sleep(1);
+        LectureResponse lecture2 = createLecture("자바 응용하기", "자바, Spring을 통한 웹 개발 실습강의입니다.", 50000, Category.Math, teacher.getId());
+        Thread.sleep(1);
+        LectureResponse lecture3 = createLecture("과학 배우기", "과학 강의입니다.", 50000, Category.Science, teacher.getId());
+        Thread.sleep(1);
+        LectureResponse lecture4 = createLecture("파이썬 기초", "파이썬을 통한 프로그래밍 기초 강의입니다.", 40000, Category.English,teacher.getId());
+        Thread.sleep(1);
+        LectureResponse lecture5 = createLecture("AI 응용", "AI 및 머신러닝 강의입니다.", 60000, Category.Math, teacher.getId());
+
+        updateLectureToPublic(lecture1.id());
+        updateLectureToPublic(lecture2.id());
+        updateLectureToPublic(lecture3.id());
+        updateLectureToPublic(lecture4.id());
+        updateLectureToPublic(lecture5.id());
+        int page = 1;
+        int size = 2;
+
+        List<LectureListResponse> list = RestAssured
+                .given().log().all()
+                .param("page", page)
+                .param("size", size)
+                .when()
+                .get("/lectures")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getList(".", LectureListResponse.class);
+
+        assertThat(list.size()).isEqualTo(2);
+        assertThat(list.get(0).title()).isEqualTo("AI 응용");
+        assertThat(list.get(1).title().equals("과학 배우기")).isFalse();
+
+        page=2;
+        List<LectureListResponse> list2 = RestAssured
+                .given().log().all()
+                .param("page", page)
+                .param("size", size)
+                .when()
+                .get("/lectures")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getList(".", LectureListResponse.class);
+
+        assertThat(list2.size()).isEqualTo(2);
+        assertThat(list2.get(0).title()).isEqualTo("과학 배우기");
+
+        page=3;
+        List<LectureListResponse> list3 = RestAssured
+                .given().log().all()
+                .param("page", page)
+                .param("size", size)
+                .when()
+                .get("/lectures")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getList(".", LectureListResponse.class);
+
+        assertThat(list3.size()).isEqualTo(1);
+        assertThat(list3.get(0).title()).isEqualTo("자바 배우기");
+
 
     }
 }

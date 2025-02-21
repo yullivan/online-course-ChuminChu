@@ -9,6 +9,7 @@ import onlinecourse.teacher.TeacherRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -28,8 +29,8 @@ public class LectureService {
         this.studentRepository = studentRepository;
     }
 
-    public List<LectureListResponse> findAll(String title, String teacherName, Category category) {
-        return lectureQueryRepository.findAll(title, teacherName,category)
+    public List<LectureListResponse> findAll(String title, String teacherName, Category category, Pageable pageable) {
+        return lectureQueryRepository.findAll(title, teacherName,category,pageable)
                 .stream()
                 .map(lecture ->  new LectureListResponse(
                         lecture.getId(),

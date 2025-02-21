@@ -2,6 +2,8 @@ package onlinecourse.lecture;
 
 import onlinecourse.Category;
 import onlinecourse.lecture.dto.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +21,11 @@ public class LectureRestController {
     @GetMapping("/lectures")
     public List<LectureListResponse> readAll(@RequestParam(required = false) String title,
                                              @RequestParam(required = false) String teacherName,
-                                             @RequestParam(required = false) Category category){
-        return lectureService.findAll(title, teacherName,category);
+                                             @RequestParam(required = false) Category category,
+                                             @RequestParam(defaultValue = "1") int page,
+                                             @RequestParam(defaultValue = "10") int size){
+        Pageable pageable = PageRequest.of(page-1, size);
+        return lectureService.findAll(title, teacherName,category, pageable);
     }
 
     //강의 상세 조회

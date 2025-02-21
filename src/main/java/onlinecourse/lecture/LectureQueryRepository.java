@@ -5,6 +5,8 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import onlinecourse.Category;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -18,7 +20,7 @@ public class LectureQueryRepository {
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
-    public List<Lecture> findAll(String title, String teacherName, Category category){
+    public List<Lecture> findAll(String title, String teacherName, Category category, Pageable pageable){
         return jpaQueryFactory
                 .selectFrom(lecture)
                 .join(lecture.teacher).fetchJoin()
@@ -31,7 +33,10 @@ public class LectureQueryRepository {
                 .orderBy(
                         lecture.createTime.desc(),
                         lecture.countStudent.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
+
     }
 
     private BooleanExpression containsCategory(Category category) {
