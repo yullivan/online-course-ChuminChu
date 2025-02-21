@@ -17,7 +17,7 @@ public class LectureEnrollmentController {
     }
 
     //수강신청
-    @PostMapping("/lectureEnrollment")
+    @PostMapping("/lectureEnrollments")
     public LectureEnrollmentResponse select(@RequestBody LectureEnrollmentRequest request){
         return lectureEnrollmentService.select(request);
     }
