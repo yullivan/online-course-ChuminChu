@@ -1,6 +1,7 @@
 package onlinecourse.lecture;
 
 import onlinecourse.lecture.dto.*;
+import onlinecourse.student.StudentRepository;
 import onlinecourse.student.dto.StudentResponse;
 import onlinecourse.teacher.Teacher;
 import onlinecourse.teacher.TeacherRepository;
@@ -17,11 +18,13 @@ public class LectureService {
     private final LectureRepository lectureRepository;
     private final LectureQueryRepository lectureQueryRepository;
     private final TeacherRepository teacherRepository;
+    private final StudentRepository studentRepository;
 
-    public LectureService(LectureRepository lectureRepository, LectureQueryRepository lectureQueryRepository, TeacherRepository teacherRepository) {
+    public LectureService(LectureRepository lectureRepository, LectureQueryRepository lectureQueryRepository, TeacherRepository teacherRepository, StudentRepository studentRepository) {
         this.lectureRepository = lectureRepository;
         this.lectureQueryRepository = lectureQueryRepository;
         this.teacherRepository = teacherRepository;
+        this.studentRepository = studentRepository;
     }
 
     public List<LectureListResponse> findAll() {
@@ -95,7 +98,8 @@ public class LectureService {
         lecture.update(
                 lectureUpdateRequest.title(),
                 lectureUpdateRequest.introduce(),
-                lectureUpdateRequest.price());
+                lectureUpdateRequest.price(),
+                LocalDateTime.now());
 
         return new LectureResponse(
                 lectureId,

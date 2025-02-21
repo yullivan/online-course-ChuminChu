@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 public record LectureUpdateRequest(
         String title,
         String introduce,
-        int price
+        int price,
+        LocalDateTime updateTime
 ) {
 }

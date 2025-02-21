@@ -108,7 +108,8 @@ public class Lecture {
     public void update(
             String title,
             String introduce,
-            int price
+            int price,
+            LocalDateTime updateTime
     ){
         this.title = title;
         this.introduce = introduce;
@@ -120,6 +121,7 @@ public class Lecture {
             throw new NoSuchElementException("수강을 신청한 학생이 있어 강의를 삭제할 수 없습니다.");
         }
         this.deleted=true;
+
     }
 
 }
